@@ -9,7 +9,6 @@
     "lint": "next lint",
     "prepare": "husky install",
     "format": "prettier --write .",
-    "check-format": "prettier .",
     "test:unit": "cypress run --component",
     "test:e2e": "start-server-and-test dev http://localhost:3000 \"cypress run\"",
     "cypress:open": "cypress open"

@@ -22,7 +22,6 @@ export const I18nProvider: FC<I18nProviderProps> = ({
   const contextValue = useMemo(() => {
     const defaultDictionary = defaultDictionaries[language];
     const dictionary = dictionaries[language];
-    console.log(dictionary);
     const translator = getTranslator({ ...defaultDictionary, ...dictionary });
     return { t: translator, currentLanguage: language };
   }, [language, dictionaries]);

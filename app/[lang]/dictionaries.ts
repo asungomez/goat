@@ -10,6 +10,7 @@ export const dictionaries = {
     'logging-in': 'Logging in',
     'my-account': 'My account',
     settings: 'Settings',
+    users: 'Users',
   },
   es: {
     greeting: 'Bienvenido a GOAT',
@@ -22,5 +23,6 @@ export const dictionaries = {
     'logging-in': 'Iniciando sesión',
     'my-account': 'Mi cuenta',
     settings: 'Configuración',
+    users: 'Usuarios',
   },
 } as const;

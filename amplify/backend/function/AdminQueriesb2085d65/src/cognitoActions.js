@@ -161,6 +161,22 @@ async function listUsers(Limit, PaginationToken) {
     result.NextToken = result.PaginationToken;
     delete result.PaginationToken;
 
+    if (result.Users.length > 0) {
+      for (let i = 0; i < result.Users.length; i++) {
+        const user = result.Users[i];
+        const userGroupParams = {
+          UserPoolId: userPoolId,
+          Username: user.Username,
+        };
+        const groupsResult = await cognitoIdentityServiceProvider
+          .adminListGroupsForUser(userGroupParams)
+          .promise();
+        result.Users[i]['Groups'] = groupsResult.Groups.map(
+          (group) => group.GroupName,
+        );
+      }
+    }
+
     return result;
   } catch (err) {
     console.log(err);

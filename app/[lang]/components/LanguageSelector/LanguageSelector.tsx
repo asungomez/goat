@@ -1,5 +1,6 @@
 import { useI18n } from '@/context/I18n/I18nContext';
 import { ValidLanguage } from '@/i18n';
+import { getLocalizedRoute, getRouteName } from '@/i18n';
 import {
   Button,
   Icon,
@@ -17,12 +18,23 @@ export const LanguageSelector: FC = () => {
   const path = usePathname();
   const router = useRouter();
 
+  if (!currentLanguage) {
+    return null;
+  }
+
   const changeLanguage = (language: ValidLanguage) => {
     if (language !== currentLanguage) {
-      const newPathname = `/${language}/${(
-        path?.split('/').slice(2) || []
-      ).join('/')}`;
-      router.push(newPathname);
+      let currentRoute = `/${(path?.split('/').slice(2) || []).join('/')}`;
+      if (currentRoute.endsWith('/') && currentRoute !== '/') {
+        currentRoute = currentRoute.slice(0, currentRoute.length - 1);
+      }
+      const routeName = getRouteName(currentRoute, currentLanguage);
+      const newPathname = routeName
+        ? getLocalizedRoute(routeName, language)
+        : path;
+      if (newPathname) {
+        router.push(newPathname);
+      }
     }
   };
 

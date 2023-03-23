@@ -1,6 +1,7 @@
 import { useAuth } from '@/context/Auth/AuthContext';
 import { CircularProgress } from '@chakra-ui/react';
 import { FC } from 'react';
+import { AdminMenu } from '../AdminMenu/AdminMenu';
 import { LogInButton } from '../LogInButton/LogInButton';
 import { UserMenu } from '../UserMenu/UserMenu';
 
@@ -12,6 +13,11 @@ export const AuthMenu: FC = () => {
     case 'unauthenticated':
       return <LogInButton />;
     case 'authenticated':
-      return <UserMenu />;
+      return (
+        <>
+          <AdminMenu />
+          <UserMenu />
+        </>
+      );
   }
 };

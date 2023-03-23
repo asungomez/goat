@@ -4,12 +4,15 @@ import * as NextNavigation from 'next/navigation';
 import React from 'react';
 import { LanguageSelector } from './LanguageSelector';
 
-const mountComponent = (language: ValidLanguage = 'en') => {
+const mountComponent = (
+  language: ValidLanguage = 'en',
+  pathname: string = '/',
+) => {
   const stubbedRouter = {
     push: cy.spy().as('push'),
   };
   cy.stub(NextNavigation, 'useRouter').returns(stubbedRouter);
-  cy.stub(NextNavigation, 'usePathname').returns('/');
+  cy.stub(NextNavigation, 'usePathname').returns(pathname);
   cy.mount(
     <I18nContext.Provider
       value={{ currentLanguage: language, t: (key) => key }}
@@ -57,5 +60,19 @@ describe('<LanguageSelector />', () => {
     cy.findByLabelText('language').click();
     cy.findByText('es').click();
     cy.get('@push').should('not.be.called');
+  });
+
+  it('redirects to /users if selecting english from /usuarios page', () => {
+    mountComponent('es', '/es/usuarios');
+    cy.findByLabelText('language').click();
+    cy.findByText('en').click();
+    cy.get('@push').should('be.calledWith', '/en/users');
+  });
+
+  it('redirects to /usuarios if selecting spanish from /users page', () => {
+    mountComponent('en', '/en/users');
+    cy.findByLabelText('language').click();
+    cy.findByText('es').click();
+    cy.get('@push').should('be.calledWith', '/es/usuarios');
   });
 });

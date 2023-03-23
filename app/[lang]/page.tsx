@@ -5,6 +5,9 @@ type HomeParams = {
   lang: ValidLanguage;
 };
 
+/**
+ * Home page
+ */
 export default async function Home({
   params: { lang },
 }: {

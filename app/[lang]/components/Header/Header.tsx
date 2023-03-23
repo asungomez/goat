@@ -1,4 +1,3 @@
-import { useI18n } from '@/context/I18n/I18nContext';
 import { Box, Flex } from '@chakra-ui/react';
 import { FC } from 'react';
 import { LanguageSelector } from '../LanguageSelector/LanguageSelector';

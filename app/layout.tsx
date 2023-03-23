@@ -4,6 +4,9 @@ import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider } from '@chakra-ui/react';
 import './globals.css';
 
+/**
+ * Page layout, including root HTML tags
+ */
 export default function RootLayout({
   children,
 }: {

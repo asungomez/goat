@@ -4,6 +4,9 @@ import { Flex } from '@chakra-ui/react';
 import { Header } from './components/Header/Header';
 import { dictionaries } from './dictionaries';
 
+/**
+ * Root layout for the entire page, client-side
+ */
 export default function RootLayout({
   children,
 }: {

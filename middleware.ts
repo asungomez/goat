@@ -42,8 +42,8 @@ export function middleware(request: NextRequest) {
         new URL(`/${matchedLocaleParts.lang}/${pathname}`, request.url),
       );
     } else {
-      // rewrite it so next.js will render `/` as if it was `/es`
-      return NextResponse.rewrite(
+      // redirect to default locale
+      return NextResponse.redirect(
         new URL(`/${defaultLocaleParts.lang}${pathname}`, request.url),
       );
     }

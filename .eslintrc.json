@@ -1,3 +1,37 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "plugin:cypress/recommended"],
+  "plugins": ["@typescript-eslint/eslint-plugin", "unused-imports"],
+  "rules": {
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "no-console": "error",
+    "no-else-return": "error",
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "no-nested-ternary": "error",
+    "no-param-reassign": "error",
+    "no-unneeded-ternary": "error",
+    "no-useless-return": "error",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "require-jsdoc": "warn",
+    "react/react-in-jsx-scope": "off",
+    "cypress/no-assigning-return-values": "off"
+  }
 }

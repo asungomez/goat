@@ -30,7 +30,7 @@
         "varsIgnorePattern": "^_"
       }
     ],
-    "require-jsdoc": "warn",
+    "require-jsdoc": "off",
     "react/react-in-jsx-scope": "off",
     "cypress/no-assigning-return-values": "off"
   }

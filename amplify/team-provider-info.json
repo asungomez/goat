@@ -21,7 +21,17 @@
       "auth": {
         "goat": {
           "googleClientId": "1083316624687-cj95adk7kecpsboqg8sac4ht4ovounhg.apps.googleusercontent.com"
+        },
+        "userPoolGroups": {}
+      },
+      "function": {
+        "AdminQueriesb2085d65": {
+          "deploymentBucketName": "amplify-goat-dev-101005-deployment",
+          "s3Key": "amplify-builds/AdminQueriesb2085d65-67306b42325551767a57-build.zip"
         }
+      },
+      "api": {
+        "AdminQueries": {}
       }
     }
   }

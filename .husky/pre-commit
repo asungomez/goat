@@ -2,6 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 yarn format && \
+git add -A && \
 yarn build && \
 yarn test:unit && \
 yarn test:e2e

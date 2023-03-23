@@ -3,12 +3,12 @@ import { createContext, useContext } from 'react';
 
 type I18nContextType = {
   t: (key: string) => string;
-  currentLanguage: ValidLanguage;
+  currentLanguage?: ValidLanguage;
 };
 
 export const I18nContext = createContext<I18nContextType>({
   t: () => '',
-  currentLanguage: 'es',
+  currentLanguage: undefined,
 });
 
 export const useI18n = () => useContext(I18nContext);

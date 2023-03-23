@@ -17,6 +17,11 @@
           "appId": "du2dpyg9a2szn",
           "type": "cicd"
         }
+      },
+      "auth": {
+        "goat": {
+          "googleClientId": "1083316624687-cj95adk7kecpsboqg8sac4ht4ovounhg.apps.googleusercontent.com"
+        }
       }
     }
   }

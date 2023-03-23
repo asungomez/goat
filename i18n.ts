@@ -46,3 +46,39 @@ export const getTranslator = (dictionary: any) => {
     return translation;
   };
 };
+
+const routeNames = ['users', 'root'] as const;
+export type RouteName = (typeof routeNames)[number];
+
+type RouteTranslations = { [lang in ValidLanguage]: string };
+export const routes: {
+  [name in RouteName]: RouteTranslations;
+} = {
+  users: {
+    es: '/usuarios',
+    en: '/users',
+  },
+  root: {
+    en: '/',
+    es: '/',
+  },
+} as const;
+
+export const getRouteName = (
+  name: string,
+  language: ValidLanguage,
+): RouteName | null => {
+  for (const routeName in routes) {
+    if (Object.prototype.hasOwnProperty.call(routes, routeName)) {
+      const route = routes[routeName as RouteName];
+      if (route[language] === name) {
+        return routeName as RouteName;
+      }
+    }
+  }
+  return null;
+};
+
+export const getLocalizedRoute = (name: RouteName, language: ValidLanguage) => {
+  return `/${language}${routes[name][language]}`;
+};

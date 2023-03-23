@@ -1,2 +1,184 @@
 import 'cypress-failed-log';
 import './commands';
+import AWS from 'aws-sdk';
+import { Auth } from 'aws-amplify';
+import { configureAmplify } from '../../src/configureAmplify';
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      createUser(email: string): Chainable<void>;
+      deleteUser(email: string): Chainable<void>;
+      logIn(email: string): Chainable<void>;
+    }
+  }
+}
+
+const createUser = async (
+  cognito: AWS.CognitoIdentityServiceProvider,
+  email: string,
+  userPoolId: string,
+): Promise<void> =>
+  new Promise((resolve, reject) => {
+    cognito.adminCreateUser(
+      {
+        UserPoolId: userPoolId,
+        Username: email,
+        TemporaryPassword: '12345678',
+        UserAttributes: [
+          {
+            Name: 'email',
+            Value: email,
+          },
+          {
+            Name: 'email_verified',
+            Value: 'true',
+          },
+        ],
+      },
+      (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      },
+    );
+  });
+
+const deleteUser = async (
+  cognito: AWS.CognitoIdentityServiceProvider,
+  email: string,
+  userPoolId: string,
+): Promise<void> =>
+  new Promise((resolve, reject) => {
+    cognito.adminDeleteUser(
+      { UserPoolId: userPoolId, Username: email },
+      (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      },
+    );
+  });
+
+Cypress.Commands.add('createUser', (email) => {
+  const accessKeyId = Cypress.env('AWS_ACCESS_KEY_ID');
+  const secretAccessKey = Cypress.env('AWS_SECRET_ACCESS_KEY');
+  const region = Cypress.env('AWS_REGION');
+  const userPoolId = Cypress.env('USER_POOL_ID');
+  if (accessKeyId && secretAccessKey && region && userPoolId) {
+    const log = Cypress.log({
+      displayName: 'COGNITO CREATE USER',
+      message: [`🧔🏻‍♀️ Creating | ${email}`],
+      autoEnd: false,
+    });
+
+    log.snapshot('before');
+    AWS.config.update({
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+      region,
+    });
+    const cognito = new AWS.CognitoIdentityServiceProvider();
+    const userCreation = createUser(cognito, email, userPoolId);
+    cy.wrap(userCreation, { log: false }).then(() => {
+      log.snapshot('after');
+      log.end();
+    });
+  } else {
+    const missingEnvVars = [];
+    if (!accessKeyId) {
+      missingEnvVars.push('CYPRESS_AWS_ACCESS_KEY_ID');
+    }
+    if (!secretAccessKey) {
+      missingEnvVars.push('CYPRESS_AWS_SECRET_ACCESS_KEY');
+    }
+    if (!region) {
+      missingEnvVars.push('CYPRESS_AWS_REGION');
+    }
+    if (!userPoolId) {
+      missingEnvVars.push('CYPRESS_USER_POOL_ID');
+    }
+    throw new Error('Missing env vars: ' + missingEnvVars.join(', '));
+  }
+});
+
+Cypress.Commands.add('deleteUser', (email) => {
+  const accessKeyId = Cypress.env('AWS_ACCESS_KEY_ID');
+  const secretAccessKey = Cypress.env('AWS_SECRET_ACCESS_KEY');
+  const region = Cypress.env('AWS_REGION');
+  const userPoolId = Cypress.env('USER_POOL_ID');
+  if (accessKeyId && secretAccessKey && region && userPoolId) {
+    const log = Cypress.log({
+      displayName: 'COGNITO DELETE USER',
+      message: [`🧔🏻‍♀️ Deleting | ${email}`],
+      autoEnd: false,
+    });
+
+    log.snapshot('before');
+    AWS.config.update({
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+      region,
+    });
+    const cognito = new AWS.CognitoIdentityServiceProvider();
+    const userDeletion = deleteUser(cognito, email, userPoolId);
+    cy.wrap(userDeletion, { log: false }).then(() => {
+      log.snapshot('after');
+      log.end();
+    });
+  }
+});
+
+const setLocalStorage = (cognitoResponse: any) => {
+  const storage = JSON.parse(JSON.stringify(cognitoResponse.storage));
+  if (storage) {
+    for (const key in storage) {
+      const value = storage[key];
+      if (
+        typeof value === 'string' &&
+        key.includes('CognitoIdentityServiceProvider')
+      ) {
+        console.log('Saving to local storage', key);
+        window.localStorage.setItem(key, value);
+      }
+    }
+  }
+};
+
+Cypress.Commands.add('logIn', (email) => {
+  configureAmplify();
+  const log = Cypress.log({
+    displayName: 'COGNITO LOGIN',
+    message: [`🔐 Authenticating | ${email}`],
+    autoEnd: false,
+  });
+
+  log.snapshot('before');
+  const signIn = Auth.signIn({ username: email, password: '12345678' });
+
+  cy.wrap(signIn, { log: false }).then((cognitoResponse: any) => {
+    if (cognitoResponse.challengeName === 'NEW_PASSWORD_REQUIRED') {
+      const newPassword = cy.wrap(
+        Auth.completeNewPassword(cognitoResponse, '12345678'),
+      );
+
+      newPassword.then((response) => {
+        setLocalStorage(response);
+        log.snapshot('after');
+        log.end();
+      });
+    } else {
+      setLocalStorage(cognitoResponse);
+      log.snapshot('after');
+      log.end();
+    }
+  });
+});

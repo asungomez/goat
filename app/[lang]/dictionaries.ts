@@ -5,6 +5,11 @@ export const dictionaries = {
     en: 'English',
     es: 'Spanish',
     language: 'Language',
+    'log-in': 'Log in',
+    'log-out': 'Log out',
+    'logging-in': 'Logging in',
+    'my-account': 'My account',
+    settings: 'Settings',
   },
   es: {
     greeting: 'Bienvenido a GOAT',
@@ -12,5 +17,10 @@ export const dictionaries = {
     en: 'Inglés',
     es: 'Español',
     language: 'Idioma',
+    'log-in': 'Iniciar sesión',
+    'log-out': 'Cerrar sesión',
+    'logging-in': 'Iniciando sesión',
+    'my-account': 'Mi cuenta',
+    settings: 'Configuración',
   },
 } as const;

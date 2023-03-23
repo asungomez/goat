@@ -1,12 +1,10 @@
 'use client';
+import { AuthProvider } from '@/context/Auth/AuthProvider';
 import { I18nProvider } from '@/context/I18n/I18nProvider';
 import { Flex } from '@chakra-ui/react';
 import { Header } from './components/Header/Header';
 import { dictionaries } from './dictionaries';
 
-/**
- * Root layout for the entire page, client-side
- */
 export default function RootLayout({
   children,
 }: {
@@ -14,10 +12,12 @@ export default function RootLayout({
 }) {
   return (
     <I18nProvider dictionaries={dictionaries}>
-      <Flex direction="column" align="center">
-        <Header />
-        {children}
-      </Flex>
+      <AuthProvider>
+        <Flex direction="column" align="center">
+          <Header />
+          {children}
+        </Flex>
+      </AuthProvider>
     </I18nProvider>
   );
 }

@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-goat-dev-101005-authRole",
+      "UnauthRoleArn": "arn:aws:iam::291311682549:role/amplify-goat-dev-101005-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::291311682549:role/amplify-goat-dev-101005-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-goat-dev-101005-deployment",
+      "UnauthRoleName": "amplify-goat-dev-101005-unauthRole",
+      "StackName": "amplify-goat-dev-101005",
+      "StackId": "arn:aws:cloudformation:eu-west-1:291311682549:stack/amplify-goat-dev-101005/8168ebd0-c95a-11ed-986a-0614170da80d",
+      "AmplifyAppId": "du2dpyg9a2szn"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "du2dpyg9a2szn",
+          "type": "cicd"
+        }
+      }
+    }
+  }
+}

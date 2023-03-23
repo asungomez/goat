@@ -1,0 +1,58 @@
+name: Pull Request Verification
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  Validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Install Amplify CLI
+        run: npm install --global --unsafe-perm @aws-amplify/cli@10.7.3
+      - name: Configure Amplify
+        run: ./amplify-init.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-west-1
+          AMPLIFY_GOOGLE_CLIENT_ID: ${{ secrets.AMPLIFY_GOOGLE_CLIENT_ID }}
+          AMPLIFY_GOOGLE_CLIENT_SECRET: ${{ secrets.AMPLIFY_GOOGLE_CLIENT_SECRET }}
+          AWS_IDENTITY_POOL_ID: ${{ secrets.AWS_IDENTITY_POOL_ID }}
+          AWS_NATIVE_CLIENT_ID: ${{ secrets.AWS_NATIVE_CLIENT_ID }}
+          AWS_WEB_CLIENT_ID: ${{ secrets.AWS_WEB_CLIENT_ID }}
+          USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+      - name: Format
+        run: yarn format
+      - name: Lint
+        run: yarn lint
+      - name: Unit test
+        run: yarn test:unit
+      - name: Build
+        run: yarn build
+      - name: E2E test
+        run: yarn test:e2e
+        env:
+          CYPRESS_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          CYPRESS_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CYPRESS_AWS_REGION: eu-west-1
+          CYPRESS_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+      - name: Upload failure screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-e2e-screenshots
+          path: cypress/screenshots
+      - name: Upload failure logs
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-e2e-logs
+          path: cypress/logs

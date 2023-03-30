@@ -27,9 +27,7 @@ async function addUserToGroup(username, groupname) {
   console.log(`Attempting to add ${username} to ${groupname}`);
 
   try {
-    const result = await cognitoIdentityServiceProvider
-      .adminAddUserToGroup(params)
-      .promise();
+    await cognitoIdentityServiceProvider.adminAddUserToGroup(params).promise();
     console.log(`Success adding ${username} to ${groupname}`);
     return {
       message: `Success adding ${username} to ${groupname}`,
@@ -50,7 +48,7 @@ async function removeUserFromGroup(username, groupname) {
   console.log(`Attempting to remove ${username} from ${groupname}`);
 
   try {
-    const result = await cognitoIdentityServiceProvider
+    await cognitoIdentityServiceProvider
       .adminRemoveUserFromGroup(params)
       .promise();
     console.log(`Removed ${username} from ${groupname}`);
@@ -71,9 +69,7 @@ async function confirmUserSignUp(username) {
   };
 
   try {
-    const result = await cognitoIdentityServiceProvider
-      .adminConfirmSignUp(params)
-      .promise();
+    await cognitoIdentityServiceProvider.adminConfirmSignUp(params).promise();
     console.log(`Confirmed ${username} registration`);
     return {
       message: `Confirmed ${username} registration`,
@@ -91,9 +87,7 @@ async function disableUser(username) {
   };
 
   try {
-    const result = await cognitoIdentityServiceProvider
-      .adminDisableUser(params)
-      .promise();
+    await cognitoIdentityServiceProvider.adminDisableUser(params).promise();
     console.log(`Disabled ${username}`);
     return {
       message: `Disabled ${username}`,
@@ -111,9 +105,7 @@ async function enableUser(username) {
   };
 
   try {
-    const result = await cognitoIdentityServiceProvider
-      .adminEnableUser(params)
-      .promise();
+    await cognitoIdentityServiceProvider.adminEnableUser(params).promise();
     console.log(`Enabled ${username}`);
     return {
       message: `Enabled ${username}`,
@@ -162,8 +154,7 @@ async function listUsers(Limit, PaginationToken) {
     delete result.PaginationToken;
 
     if (result.Users.length > 0) {
-      for (let i = 0; i < result.Users.length; i++) {
-        const user = result.Users[i];
+      for (const user of result.Users) {
         const userGroupParams = {
           UserPoolId: userPoolId,
           Username: user.Username,
@@ -171,9 +162,7 @@ async function listUsers(Limit, PaginationToken) {
         const groupsResult = await cognitoIdentityServiceProvider
           .adminListGroupsForUser(userGroupParams)
           .promise();
-        result.Users[i]['Groups'] = groupsResult.Groups.map(
-          (group) => group.GroupName,
-        );
+        user['Groups'] = groupsResult.Groups.map((group) => group.GroupName);
       }
     }
 
@@ -224,15 +213,15 @@ async function listGroupsForUser(username, Limit, NextToken) {
       .adminListGroupsForUser(params)
       .promise();
     /**
-     * We are filtering out the results that seem to be innapropriate for client applications
-     * to prevent any informaiton disclosure. Customers can modify if they have the need.
+     * We are filtering out the results that seem to be inappropriate for client applications
+     * to prevent any information disclosure. Customers can modify if they have the need.
      */
     result.Groups.forEach((val) => {
-      delete val.UserPoolId,
-        delete val.LastModifiedDate,
-        delete val.CreationDate,
-        delete val.Precedence,
-        delete val.RoleArn;
+      delete val.UserPoolId;
+      delete val.LastModifiedDate;
+      delete val.CreationDate;
+      delete val.Precedence;
+      delete val.RoleArn;
     });
 
     return result;
@@ -270,10 +259,10 @@ async function signUserOut(username) {
     Username: username,
   };
 
-  console.log(`Attempting to signout ${username}`);
+  console.log(`Attempting to sign-out ${username}`);
 
   try {
-    const result = await cognitoIdentityServiceProvider
+    await cognitoIdentityServiceProvider
       .adminUserGlobalSignOut(params)
       .promise();
     console.log(`Signed out ${username} from all devices`);

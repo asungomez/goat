@@ -1,20 +1,24 @@
 'use client';
 
 import { useUsers } from '@/hooks/useUsers';
-import { Box, Container, Divider, Skeleton, Stack } from '@chakra-ui/react';
+import { Container, Skeleton, Stack } from '@chakra-ui/react';
 import { FC } from 'react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserItem } from '../UserItem/UserItem';
+import { InfiniteList } from '@/components/InfiniteList/InfiniteList';
 
 export const Users: FC = () => {
-  const { users, isLoading } = useUsers();
-  if (isLoading) {
+  const { users, isLoading, hasMore, loadMore } = useUsers();
+
+  if (isLoading && users.length === 0) {
     return (
-      <Stack>
-        <Skeleton height="20px" />
-        <Skeleton height="20px" />
-        <Skeleton height="20px" />
-      </Stack>
+      <Container>
+        <Stack>
+          <Skeleton height="20px" />
+          <Skeleton height="20px" />
+          <Skeleton height="20px" />
+        </Stack>
+      </Container>
     );
   }
   return (
@@ -22,14 +26,14 @@ export const Users: FC = () => {
       {!!users?.length && (
         <Container>
           <SearchBar />
-          <Box borderWidth="1px" borderRadius="lg" mt={4}>
-            {users.map((user, index) => (
-              <>
-                <UserItem user={user} key={user.id} />
-                {index < users.length - 1 && <Divider />}
-              </>
+          <InfiniteList
+            items={users.map((user) => (
+              <UserItem user={user} key={user.id} />
             ))}
-          </Box>
+            hasMore={hasMore}
+            onLoadMore={loadMore}
+            loading={isLoading}
+          />
         </Container>
       )}
     </>

@@ -38,6 +38,18 @@ describe('Internationalization', () => {
       cy.url().should('include', '/es');
     });
   });
+
+  describe('Multilingual routes', () => {
+    it('renders spanish copy when visiting spanish route', () => {
+      cy.visit('/es/usuarios');
+      cy.contains('Acceso restringido');
+    });
+
+    it('renders english copy when visiting english route', () => {
+      cy.visit('/en/users');
+      cy.contains('Forbidden');
+    });
+  });
 });
 
 export {};

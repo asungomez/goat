@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import langParser from 'accept-language-parser';
-import { defaultLocale, getLocalePartsFrom, locales } from './i18n';
+import {
+  defaultLocale,
+  getLocalePartsFrom,
+  getRouteName,
+  locales,
+  ValidLanguage,
+} from './i18n';
 
 const findBestMatchingLocale = (acceptLangHeader: string) => {
   // parse the locales acceptable in the header, and sort them by priority (q)
@@ -41,12 +47,23 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(
         new URL(`/${matchedLocaleParts.lang}/${pathname}`, request.url),
       );
-    } else {
-      // redirect to default locale
-      return NextResponse.redirect(
-        new URL(`/${defaultLocaleParts.lang}${pathname}`, request.url),
-      );
     }
+    // redirect to default locale
+    return NextResponse.redirect(
+      new URL(`/${defaultLocaleParts.lang}${pathname}`, request.url),
+    );
+  }
+
+  let localizedRoute = `/${pathname.split('/').slice(2).join('/')}`;
+  const language = pathname.split('/')[1] as ValidLanguage;
+  if (localizedRoute.endsWith('/')) {
+    localizedRoute = localizedRoute.slice(0, localizedRoute.length - 1);
+  }
+  const routeName = getRouteName(localizedRoute, language);
+  if (routeName) {
+    return NextResponse.rewrite(
+      new URL(`/${language}/${routeName}`, request.url),
+    );
   }
 }
 

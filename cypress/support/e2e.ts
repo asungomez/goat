@@ -3,11 +3,12 @@ import './commands';
 import AWS from 'aws-sdk';
 import { Auth } from 'aws-amplify';
 import { configureAmplify } from '../../src/configureAmplify';
+import { Role } from '@/services/usersService';
 
 declare global {
   namespace Cypress {
     interface Chainable {
-      createUser(email: string): Chainable<void>;
+      createUser(email: string, role?: Role): Chainable<void>;
       deleteUser(email: string): Chainable<void>;
       logIn(email: string): Chainable<void>;
     }
@@ -18,6 +19,7 @@ const createUser = async (
   cognito: AWS.CognitoIdentityServiceProvider,
   email: string,
   userPoolId: string,
+  group?: string,
 ): Promise<void> =>
   new Promise((resolve, reject) => {
     cognito.adminCreateUser(
@@ -40,7 +42,24 @@ const createUser = async (
         if (error) {
           reject(error);
         } else {
-          resolve();
+          if (group) {
+            cognito.adminAddUserToGroup(
+              {
+                UserPoolId: userPoolId,
+                Username: email,
+                GroupName: group,
+              },
+              (error) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve();
+                }
+              },
+            );
+          } else {
+            resolve();
+          }
         }
       },
     );
@@ -64,7 +83,7 @@ const deleteUser = async (
     );
   });
 
-Cypress.Commands.add('createUser', (email) => {
+Cypress.Commands.add('createUser', (email, role = 'Visitor') => {
   const accessKeyId = Cypress.env('AWS_ACCESS_KEY_ID');
   const secretAccessKey = Cypress.env('AWS_SECRET_ACCESS_KEY');
   const region = Cypress.env('AWS_REGION');
@@ -85,7 +104,8 @@ Cypress.Commands.add('createUser', (email) => {
       region,
     });
     const cognito = new AWS.CognitoIdentityServiceProvider();
-    const userCreation = createUser(cognito, email, userPoolId);
+    const group = role !== 'Visitor' ? role : undefined;
+    const userCreation = createUser(cognito, email, userPoolId, group);
     cy.wrap(userCreation, { log: false }).then(() => {
       log.snapshot('after');
       log.end();

@@ -27,7 +27,7 @@
       "function": {
         "AdminQueriesb2085d65": {
           "deploymentBucketName": "amplify-goat-dev-101005-deployment",
-          "s3Key": "amplify-builds/AdminQueriesb2085d65-6658526c4a676c734759-build.zip"
+          "s3Key": "amplify-builds/AdminQueriesb2085d65-6473472b6636374e4a4c-build.zip"
         }
       },
       "api": {

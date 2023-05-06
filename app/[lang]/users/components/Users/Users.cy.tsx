@@ -69,11 +69,27 @@ describe('<Users />', () => {
     cy.findByDisplayValue('visitor');
   });
 
-  // it('shows the first 10 items and pages if there are more than 10', () => {});
-
-  // it('shows items from the 11th when navigating to the second page', () => {});
-
-  // it('filters out by email when typing on the search bar', () => {});
-
-  // it('displays a "Not Results" error when the search has no results', () => {});
+  it('displays a "Not Results" error when the search has no results', () => {
+    cy.stub(Auth, 'currentSession').resolves({
+      getAccessToken: () => ({
+        getJwtToken: () => 'token',
+      }),
+    });
+    cy.stub(API, 'get')
+      .onFirstCall()
+      .returns({
+        Users: [
+          {
+            Username: '1',
+            Attributes: [{ Value: 'visitor@user.com', Name: 'email' }],
+            Groups: [],
+          },
+        ],
+      })
+      .onSecondCall()
+      .returns({ Users: [] });
+    cy.mount(<Users />, { withI18n: true });
+    cy.findByRole('textbox').type('some query{enter}');
+    cy.contains('empty-message');
+  });
 });

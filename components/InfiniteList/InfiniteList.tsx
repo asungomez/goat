@@ -1,6 +1,8 @@
 import { useI18n } from '@/context/I18n/I18nContext';
-import { Box, Center, Divider, Link, Text } from '@chakra-ui/react';
-import { FC, Fragment, ReactNode } from 'react';
+import { Box, Center, Link, Text } from '@chakra-ui/react';
+import { FC, ReactNode } from 'react';
+import { EmptySpace } from '../EmptySpace/EmptySpace';
+import { List } from '../List/List';
 
 type InfiniteListProps = {
   items: ReactNode[];
@@ -17,18 +19,15 @@ export const InfiniteList: FC<InfiniteListProps> = ({
 }) => {
   const { t } = useI18n();
   if (items.length === 0) {
-    return <Text>{t('empty-message')}</Text>;
+    return (
+      <Box p={4}>
+        <EmptySpace />
+      </Box>
+    );
   }
   return (
     <>
-      <Box borderWidth="1px" borderRadius="lg" mt={4} mb={4}>
-        {items.map((item, index) => (
-          <Fragment key={index}>
-            {item}
-            {index < items.length - 1 && <Divider />}
-          </Fragment>
-        ))}
-      </Box>
+      <List items={items} />
       {hasMore && (
         <Center w="100%">
           {loading ? (

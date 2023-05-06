@@ -16,17 +16,9 @@ const bodyParser = require('body-parser');
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
 
 const {
-  addUserToGroup,
-  removeUserFromGroup,
-  confirmUserSignUp,
-  disableUser,
-  enableUser,
-  getUser,
   listUsers,
-  listGroups,
-  listGroupsForUser,
-  listUsersInGroup,
-  signUserOut,
+  removeUserGroups,
+  setUserGroup,
 } = require('./cognitoActions');
 
 const app = express();
@@ -79,36 +71,6 @@ const checkGroup = function (req, res, next) {
 };
 
 app.all('*', checkGroup);
-
-// app.post('/addUserToGroup', async (req, res, next) => {
-//   if (!req.body.username || !req.body.groupname) {
-//     const err = new Error('username and groupname are required');
-//     err.statusCode = 400;
-//     return next(err);
-//   }
-
-//   try {
-//     const response = await addUserToGroup(req.body.username, req.body.groupname);
-//     res.status(200).json(response);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// app.post('/removeUserFromGroup', async (req, res, next) => {
-//   if (!req.body.username || !req.body.groupname) {
-//     const err = new Error('username and groupname are required');
-//     err.statusCode = 400;
-//     return next(err);
-//   }
-
-//   try {
-//     const response = await removeUserFromGroup(req.body.username, req.body.groupname);
-//     res.status(200).json(response);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
 
 // app.post('/confirmUserSignUp', async (req, res, next) => {
 //   if (!req.body.username) {
@@ -173,13 +135,43 @@ app.all('*', checkGroup);
 app.get('/listUsers', async (req, res, next) => {
   try {
     let response;
-    if (req.query.token) {
-      response = await listUsers(req.query.limit || 25, req.query.token);
-    } else if (req.query.limit) {
-      response = await listUsers(req.query.limit);
-    } else {
-      response = await listUsers();
+    let limit = req.query.limit;
+    let token = req.query.token;
+    let search = req.query.search;
+    if (req.query.token && !req.query.limit) {
+      limit = 25;
     }
+    response = await listUsers(limit, token, search);
+    res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/setUserGroup', async (req, res, next) => {
+  if (!req.body.username || !req.body.groupname) {
+    const err = new Error('username and groupname are required');
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  try {
+    const response = await setUserGroup(req.body.username, req.body.groupname);
+    res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/removeUserGroups', async (req, res, next) => {
+  if (!req.body.username) {
+    const err = new Error('username is required');
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  try {
+    const response = await removeUserGroups(req.body.username);
     res.status(200).json(response);
   } catch (err) {
     next(err);

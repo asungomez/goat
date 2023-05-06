@@ -1,6 +1,6 @@
 import { API, Auth } from 'aws-amplify';
 
-const PATHS = ['/listUsers'] as const;
+const PATHS = ['/listUsers', '/setUserGroup', '/removeUserGroups'] as const;
 const ROLES = ['Admin', 'Editor', 'Visitor'] as const;
 
 export type Role = (typeof ROLES)[number];
@@ -80,8 +80,13 @@ export type ListUsersResponse = {
 
 export const listUsers = async (
   nextToken?: string,
+  email?: string,
 ): Promise<ListUsersResponse> => {
-  const response = await get('/listUsers', { token: nextToken, limit: 10 });
+  const response = await get('/listUsers', {
+    token: nextToken,
+    limit: 10,
+    search: email,
+  });
   if (
     !response.Users ||
     !Array.isArray(response.Users) ||
@@ -110,4 +115,12 @@ export const listUsers = async (
     users,
     nextToken: response.NextToken,
   };
+};
+
+export const setUserRole = async (id: string, role: Role): Promise<void> => {
+  if (role !== 'Visitor') {
+    await post('/setUserGroup', { username: id, groupname: role });
+  } else {
+    await post('/removeUserGroups', { username: id });
+  }
 };

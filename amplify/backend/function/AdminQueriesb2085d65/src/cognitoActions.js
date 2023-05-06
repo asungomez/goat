@@ -17,25 +17,61 @@ const { CognitoIdentityServiceProvider } = require('aws-sdk');
 const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider();
 const userPoolId = process.env.USERPOOL;
 
-async function addUserToGroup(username, groupname) {
-  const params = {
-    GroupName: groupname,
+async function getUserGroups(username) {
+  const userGroupParams = {
     UserPoolId: userPoolId,
     Username: username,
   };
+  const groupsResult = await cognitoIdentityServiceProvider
+    .adminListGroupsForUser(userGroupParams)
+    .promise();
 
-  console.log(`Attempting to add ${username} to ${groupname}`);
+  const groups = groupsResult.Groups.map((group) => group.GroupName);
+  return groups;
+}
 
-  try {
-    await cognitoIdentityServiceProvider.adminAddUserToGroup(params).promise();
-    console.log(`Success adding ${username} to ${groupname}`);
-    return {
-      message: `Success adding ${username} to ${groupname}`,
+async function setUserGroup(username, groupname) {
+  const groups = await getUserGroups(username);
+
+  if (!groups.includes(groupname)) {
+    const addToGroupsParams = {
+      GroupName: groupname,
+      UserPoolId: userPoolId,
+      Username: username,
     };
-  } catch (err) {
-    console.log(err);
-    throw err;
+
+    console.log(`Attempting to add ${username} to ${groupname}`);
+
+    try {
+      await cognitoIdentityServiceProvider
+        .adminAddUserToGroup(addToGroupsParams)
+        .promise();
+      console.log(`Success adding ${username} to ${groupname}`);
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  } else {
+    console.log(`${username} is already in ${groupname}`);
   }
+
+  const restOfGroups = groups.filter((group) => group !== groupname);
+
+  for (const group of restOfGroups) {
+    await removeUserFromGroup(username, group);
+  }
+
+  return {
+    message: `Success setting ${username} group to ${groupname}`,
+  };
+}
+
+async function removeUserGroups(username) {
+  const groups = await getUserGroups(username);
+  for (const group of groups) {
+    await removeUserFromGroup(username, group);
+  }
+  console.log(`All groups removed from ${username}`);
 }
 
 async function removeUserFromGroup(username, groupname) {
@@ -135,12 +171,15 @@ async function getUser(username) {
   }
 }
 
-async function listUsers(Limit, PaginationToken) {
+async function listUsers(Limit, PaginationToken, Search) {
   const params = {
     UserPoolId: userPoolId,
     ...(Limit && { Limit }),
     ...(PaginationToken && { PaginationToken }),
   };
+  if (Search) {
+    params['Filter'] = `email ^= "${Search}"`;
+  }
 
   console.log('Attempting to list users');
 
@@ -276,8 +315,6 @@ async function signUserOut(username) {
 }
 
 module.exports = {
-  addUserToGroup,
-  removeUserFromGroup,
   confirmUserSignUp,
   disableUser,
   enableUser,
@@ -286,5 +323,7 @@ module.exports = {
   listGroups,
   listGroupsForUser,
   listUsersInGroup,
+  removeUserGroups,
+  setUserGroup,
   signUserOut,
 };

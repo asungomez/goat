@@ -1,6 +1,7 @@
 'use client';
 import { AdminOnly } from '@/components/AdminOnly/AdminOnly';
 import { I18nProvider } from '@/context/I18n/I18nProvider';
+import { UsersManagementProvider } from '@/context/UsersManagement/UsersManagementProvider';
 import { dictionaries } from './dictionaries';
 
 export default function UsersLayout({
@@ -10,7 +11,9 @@ export default function UsersLayout({
 }) {
   return (
     <I18nProvider dictionaries={dictionaries}>
-      <AdminOnly>{children}</AdminOnly>
+      <AdminOnly>
+        <UsersManagementProvider>{children}</UsersManagementProvider>
+      </AdminOnly>
     </I18nProvider>
   );
 }

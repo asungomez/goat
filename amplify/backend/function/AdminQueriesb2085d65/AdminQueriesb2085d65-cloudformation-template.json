@@ -159,7 +159,8 @@
                 "cognito-idp:AdminAddUserToGroup",
                 "cognito-idp:AdminListGroupsForUser",
                 "cognito-idp:ListUsers",
-                "cognito-idp:ListGroups"
+                "cognito-idp:ListGroups",
+                "cognito-idp:DescribeUserPool"
               ],
               "Resource": {
                 "Fn::Join": [

@@ -1,11 +1,11 @@
 import { API, Auth } from 'aws-amplify';
 
-const PATHS = ['/listUsers'] as const;
-const ROLES = ['Admin', 'Visitor'] as const;
+const PATHS = ['/listUsers', '/setUserGroup', '/removeUserGroups'] as const;
+const ROLES = ['Admin', 'Editor', 'Visitor'] as const;
 
-type Role = (typeof ROLES)[number];
+export type Role = (typeof ROLES)[number];
 
-type UserResponse = {
+export type UserResponse = {
   Username: string;
   Attributes: { Name: string; Value: string }[];
   Groups: string[];
@@ -19,7 +19,7 @@ export type User = {
 
 const get = async (
   path: (typeof PATHS)[number],
-  queryParams: { [param: string]: string } = {},
+  queryParams: { [param: string]: string | undefined | number } = {},
 ) => {
   return API.get('AdminQueries', path, {
     headers: {
@@ -73,14 +73,26 @@ const isAttribute = (
   !!(value as { Name: string; Value: string })['Name'] &&
   !!(value as { Name: string; Value: string })['Value'];
 
-export const listUsers = async () => {
-  const response = await get('/listUsers');
+export type ListUsersResponse = {
+  users: User[];
+  nextToken?: string;
+};
+
+export const listUsers = async (
+  nextToken?: string,
+  email?: string,
+): Promise<ListUsersResponse> => {
+  const response = await get('/listUsers', {
+    token: nextToken,
+    limit: 10,
+    search: email,
+  });
   if (
     !response.Users ||
     !Array.isArray(response.Users) ||
     !response.Users.length
   ) {
-    return [];
+    return { users: [] };
   }
   const users = response.Users.map((user: unknown): User | null => {
     if (!isUserResponse(user)) {
@@ -99,5 +111,16 @@ export const listUsers = async () => {
     }
     return { id, email, role };
   }).filter(Boolean);
-  return users;
+  return {
+    users,
+    nextToken: response.NextToken,
+  };
+};
+
+export const setUserRole = async (id: string, role: Role): Promise<void> => {
+  if (role !== 'Visitor') {
+    await post('/setUserGroup', { username: id, groupname: role });
+  } else {
+    await post('/removeUserGroups', { username: id });
+  }
 };

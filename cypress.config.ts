@@ -10,7 +10,7 @@ export default defineConfig({
   },
 
   e2e: {
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on, _) {
       require('cypress-failed-log/on')(on);
     },
     baseUrl: 'http://localhost:3000',

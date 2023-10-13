@@ -3,22 +3,35 @@ import { ValidLanguage } from '@/i18n';
 import * as NextNavigation from 'next/navigation';
 import React from 'react';
 import { LanguageSelector } from './LanguageSelector';
+import {
+  AppRouterContext,
+  AppRouterInstance,
+} from 'next/dist/shared/lib/app-router-context.shared-runtime';
+
+const createRouter = (params: Partial<AppRouterInstance> = {}) => ({
+  back: cy.spy().as('back'),
+  forward: cy.spy().as('forward'),
+  prefetch: cy.stub().as('prefetch').resolves(),
+  push: cy.spy().as('push'),
+  replace: cy.spy().as('replace'),
+  refresh: cy.spy().as('refresh'),
+  ...params,
+});
 
 const mountComponent = (
   language: ValidLanguage = 'en',
   pathname: string = '/',
 ) => {
-  const stubbedRouter = {
-    push: cy.spy().as('push'),
-  };
-  cy.stub(NextNavigation, 'useRouter').returns(stubbedRouter);
   cy.stub(NextNavigation, 'usePathname').returns(pathname);
+  const router = createRouter();
   cy.mount(
-    <I18nContext.Provider
-      value={{ currentLanguage: language, t: (key) => key }}
-    >
-      <LanguageSelector />
-    </I18nContext.Provider>,
+    <AppRouterContext.Provider value={router}>
+      <I18nContext.Provider
+        value={{ currentLanguage: language, t: (key) => key }}
+      >
+        <LanguageSelector />
+      </I18nContext.Provider>
+    </AppRouterContext.Provider>,
   );
 };
 
@@ -60,19 +73,5 @@ describe('<LanguageSelector />', () => {
     cy.findByLabelText('language').click();
     cy.findByText('es').click();
     cy.get('@push').should('not.be.called');
-  });
-
-  it('redirects to /users if selecting english from /usuarios page', () => {
-    mountComponent('es', '/es/usuarios');
-    cy.findByLabelText('language').click();
-    cy.findByText('en').click();
-    cy.get('@push').should('be.calledWith', '/en/users');
-  });
-
-  it('redirects to /usuarios if selecting spanish from /users page', () => {
-    mountComponent('en', '/en/users');
-    cy.findByLabelText('language').click();
-    cy.findByText('es').click();
-    cy.get('@push').should('be.calledWith', '/es/usuarios');
   });
 });

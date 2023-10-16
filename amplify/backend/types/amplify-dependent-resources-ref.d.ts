@@ -5,6 +5,14 @@ export type AmplifyDependentResourcesAttributes = {
       ApiName: 'string';
       RootUrl: 'string';
     };
+    graphql: {
+      ApiName: 'string';
+      ClusterName: 'string';
+      ContainerNames: 'string';
+      PipelineName: 'string';
+      RootUrl: 'string';
+      ServiceName: 'string';
+    };
   };
   auth: {
     goat: {

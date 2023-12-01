@@ -6,9 +6,9 @@ import { dictionaries } from './dictionaries';
 
 export default function UsersLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <I18nProvider dictionaries={dictionaries}>
       <AdminOnly>

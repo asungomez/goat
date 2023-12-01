@@ -22,6 +22,11 @@
       "build": true,
       "dependsOn": [
         {
+          "attributes": ["Name", "Arn", "StreamArn"],
+          "category": "storage",
+          "resourceName": "goat"
+        },
+        {
           "attributes": [
             "ClusterName",
             "VpcId",
@@ -82,6 +87,7 @@
       "service": "Cognito-UserPool-Groups"
     }
   },
+  "custom": {},
   "function": {
     "AdminQueriesb2085d65": {
       "build": true,
@@ -143,6 +149,12 @@
           "resourceName": "amplifyhosting"
         }
       ]
+    }
+  },
+  "storage": {
+    "goat": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
     }
   }
 }

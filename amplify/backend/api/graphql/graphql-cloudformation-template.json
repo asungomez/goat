@@ -15,6 +15,15 @@
     "ParamZipPath": {
       "Type": "String"
     },
+    "storagegoatName": {
+      "Type": "String"
+    },
+    "storagegoatArn": {
+      "Type": "String"
+    },
+    "storagegoatStreamArn": {
+      "Type": "String"
+    },
     "NetworkStackClusterName": {
       "Type": "String"
     },
@@ -103,6 +112,59 @@
         }
       }
     },
+    "TaskDefinitionTaskRoleDefaultPolicy282E8624": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PartiQLInsert",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:PartiQLSelect",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*",
+                "dynamodb:PartiQLUpdate",
+                "dynamodb:Delete*",
+                "dynamodb:PartiQLDelete"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Ref": "storagegoatArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storagegoatArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "TaskDefinitionTaskRoleDefaultPolicy282E8624",
+        "Roles": [
+          {
+            "Ref": "TaskDefinitionTaskRoleFD40A61D"
+          }
+        ]
+      }
+    },
     "TaskDefinition": {
       "Type": "AWS::ECS::TaskDefinition",
       "Properties": {
@@ -110,6 +172,26 @@
           {
             "Command": [],
             "EntryPoint": [],
+            "Environment": [
+              {
+                "Name": "STORAGE_GOAT_NAME",
+                "Value": {
+                  "Ref": "storagegoatName"
+                }
+              },
+              {
+                "Name": "STORAGE_GOAT_ARN",
+                "Value": {
+                  "Ref": "storagegoatArn"
+                }
+              },
+              {
+                "Name": "STORAGE_GOAT_STREAMARN",
+                "Value": {
+                  "Ref": "storagegoatStreamArn"
+                }
+              }
+            ],
             "Essential": true,
             "Image": {
               "Fn::Join": [

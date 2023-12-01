@@ -22,22 +22,30 @@ export const getLocalePartsFrom = ({ pathname, locale }: LocaleSource) => {
       lang: localeParts[0],
       country: localeParts[1],
     };
-  } else {
-    const pathnameParts = pathname!.toLowerCase().split('/');
-    return {
-      lang: pathnameParts[1],
-    };
   }
+  const pathnameParts = pathname!.toLowerCase().split('/');
+  return {
+    lang: pathnameParts[1],
+  };
 };
 
-export const getTranslator = (dictionary: any) => {
+export const getTranslator = (dictionary: Record<string, unknown>) => {
   return (key: string, params?: { [key: string]: string | number }): string => {
-    let translation = key
-      .split('.')
-      .reduce((obj, key) => obj && obj[key], dictionary);
-    if (!translation) {
+    const keyParts = key.split('.');
+    let partialDictionary: unknown = dictionary;
+    for (const part of keyParts) {
+      partialDictionary = (partialDictionary as Record<string, unknown>)[part];
+      if (
+        partialDictionary === undefined ||
+        typeof partialDictionary === 'string'
+      ) {
+        break;
+      }
+    }
+    if (typeof partialDictionary !== 'string') {
       return key;
     }
+    let translation: string = partialDictionary;
     if (params && Object.entries(params).length) {
       Object.entries(params).forEach(([key, value]) => {
         translation = translation.replace(`{{ ${key} }}`, String(value));
@@ -69,7 +77,7 @@ export const getRouteName = (
   language: ValidLanguage,
 ): RouteName | null => {
   for (const routeName in routes) {
-    if (Object.prototype.hasOwnProperty.call(routes, routeName)) {
+    if (Object.hasOwn(routes, routeName)) {
       const route = routes[routeName as RouteName];
       if (route[language] === name) {
         return routeName as RouteName;

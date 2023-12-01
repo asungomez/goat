@@ -7,9 +7,9 @@ type HomeParams = {
 
 export default async function Home({
   params: { lang },
-}: {
+}: Readonly<{
   params: HomeParams;
-}) {
+}>) {
   const translate = getTranslator(dictionaries[lang]);
   return <h1>{translate('greeting')}</h1>;
 }

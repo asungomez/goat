@@ -1,38 +1,76 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# GOAT project
 
-## Getting Started
+Welcome to the GOAT project! This is a project to create the GOAT (Greatest Of All Time) city guide as a web application.
 
-First, run the development server:
+## Getting started
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Node.js](https://nodejs.org/en/) (version 18 or higher)
+- [Yarn](https://yarnpkg.com/) (version 1.22 or higher)
+- [Docker](https://www.docker.com/) (version 20.10 or higher)
+- [Docker Compose](https://docs.docker.com/compose/) (version 1.29 or higher)
+- [Python](https://www.python.org/) (version 3.11 or higher)
+- [Pip](https://pypi.org/project/pip/) (version 21.3 or higher)
+- [AWS CLI](https://aws.amazon.com/cli/) (version 2.2 or higher)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Optional:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- [NoSQL Workbench](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone the repository
+2. Run `yarn install` in the root of the repository
+3. Create a Python virtual environment
+4. Run `pip install -r amplify/backend/api/graphql/src/requirements.txt` in the root of the repository
 
-## Learn More
+### Running the application
 
-To learn more about Next.js, take a look at the following resources:
+For running the front-end:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Run `yarn start` in the root of the repository
+2. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+For running the database:
 
-## Deploy on Vercel
+1. Run `yarn db:start` in the root of the repository
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+For running the API:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Run `yarn api:start` in the root of the repository
+2. Open [http://localhost:8000](http://localhost:8000) in your browser
+
+## Running the tests
+
+### Front-end
+
+1. Run `yarn test:unit` in the root of the repository for unit tests
+
+### Back-end
+
+TBD
+
+### End-to-end
+
+1. Run `yarn test:e2e` in the root of the repository for end-to-end tests
+
+## Deployment
+
+Deployment to the development environment is done automatically when a pull request is merged to the `main` branch.
+
+## Local development environment
+
+### NoSQL Workbench
+
+To use NoSQL Workbench with DynamoDB Local:
+
+1. Download [NoSQL Workbench](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
+2. Open NoSQL Workbench
+3. Select DynamoDB
+4. Select `Operation Builder` on the left side menu
+5. Select `Add Connection`
+6. Select the tab `DynamoDB local`
+7. In the `Connection name` field, enter `GOAT`
+8. In the `Hostname` field, enter `localhost`
+9. In the `Port` field, enter `8008`

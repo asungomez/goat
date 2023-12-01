@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "api:start": "cd amplify/backend/api/graphql/src/app && uvicorn main:app --reload --env-file .env.api",
-    "db:start": "docker-compose up dynamodb -d",
+    "db:start": "./scripts/start_local_db.sh",
     "lint": "next lint",
     "prepare": "husky install",
     "format": "prettier --write .",

@@ -6,6 +6,8 @@ export type City = {
   translations: { [language in ValidLanguage]: CityTranslation };
 };
 
+export type CityFormValues = Omit<City, 'id'>;
+
 export type CityTranslation = {
   name: string;
   slug: string;

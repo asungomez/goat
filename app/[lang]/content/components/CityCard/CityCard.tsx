@@ -8,11 +8,14 @@ import {
   CardBody,
   CardFooter,
   Heading,
+  Icon,
   Image,
   Stack,
   Text,
 } from '@chakra-ui/react';
 import { FC } from 'react';
+import { MdModeEdit, MdDelete } from 'react-icons/md';
+import { FaList } from 'react-icons/fa';
 
 type CityCardProps = {
   city: TranslatedCity;
@@ -24,8 +27,8 @@ export const CityCard: FC<CityCardProps> = ({ city }) => {
     <Card
       w={{
         base: '100%',
-        md: '48%',
-        lg: '32%',
+        lg: '48%',
+        xl: '32%',
       }}
     >
       <CardBody>
@@ -37,7 +40,20 @@ export const CityCard: FC<CityCardProps> = ({ city }) => {
       </CardBody>
       <CardFooter>
         <ButtonGroup spacing="2">
-          <Button variant="solid">{t('edit-city')}</Button>
+          <Button variant="solid" leftIcon={<Icon as={MdModeEdit} />} size="sm">
+            {t('edit-city')}
+          </Button>
+          <Button
+            variant="solid"
+            colorScheme="red"
+            leftIcon={<Icon as={MdDelete} />}
+            size="sm"
+          >
+            {t('delete-city')}
+          </Button>
+          <Button variant="outline" leftIcon={<Icon as={FaList} />} size="sm">
+            {t('list-city-points')}
+          </Button>
         </ButtonGroup>
       </CardFooter>
     </Card>

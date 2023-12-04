@@ -2,6 +2,7 @@ export const dictionaries = {
   en: {
     'admin-only': 'You need to be admin to perform this action',
     clear: 'Clear',
+    'click-to-upload': 'Click to upload',
     content: 'Content',
     'editor-only': 'You need to be editor to perform this action',
     'empty-message': 'This looks empty',
@@ -9,6 +10,7 @@ export const dictionaries = {
     'internal-error': 'Internal error',
     'load-more': 'Load more',
     loading: 'Loading',
+    'or-drag-and-drop': 'or drag and drop',
     reload: 'Reload',
     'search-failed': 'The search operation failed. Please try again.',
     searching: 'Searching',
@@ -18,6 +20,7 @@ export const dictionaries = {
   es: {
     'admin-only': 'Necesitas ser Administrador para llevar a cabo esta acción',
     clear: 'Borrar',
+    'click-to-upload': 'Click para seleccionar',
     content: 'Contenido',
     'editor-only': 'Necesitas ser Editor para llevar a cabo esta acción',
     'empty-message': 'Parece que aquí no hay nada',
@@ -25,6 +28,7 @@ export const dictionaries = {
     'internal-error': 'Error interno',
     'load-more': 'Ver más',
     loading: 'Cargando',
+    'or-drag-and-drop': 'o arrastra aquí',
     reload: 'Volver a cargar',
     'search-failed': 'La búsqueda ha fallado. Por favor, inténtalo de nuevo.',
     searching: 'Buscando',

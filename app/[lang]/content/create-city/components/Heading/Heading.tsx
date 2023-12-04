@@ -5,5 +5,5 @@ import { FC } from 'react';
 
 export const Heading: FC = () => {
   const { t } = useI18n();
-  return <HeadingUI mb={5}>{t('cities')}</HeadingUI>;
+  return <HeadingUI mb={5}>{t('title')}</HeadingUI>;
 };

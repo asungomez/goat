@@ -5,9 +5,11 @@ import { FC, ReactNode, useMemo } from 'react';
 import { I18nContext } from './I18nContext';
 import { dictionaries as defaultDictionaries } from '@/dictionaries';
 
+type Dictionary = { [k: string]: string | Dictionary };
+
 type I18nProviderProps = {
   children: ReactNode;
-  dictionaries: { [language in ValidLanguage]: Record<string, string> };
+  dictionaries: { [language in ValidLanguage]: Dictionary };
 };
 
 export const I18nProvider: FC<I18nProviderProps> = ({

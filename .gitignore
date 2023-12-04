@@ -68,3 +68,6 @@ amplifytools.xcconfig
 
 # cache files
 __pycache__
+
+# local dev environment
+docker_volumes

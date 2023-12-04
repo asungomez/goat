@@ -1,6 +1,6 @@
 export const defaultLocale = 'es-ES';
 export const locales = ['en-US', 'es-ES'] as const;
-const languages = ['en', 'es'] as const;
+export const languages = ['en', 'es'] as const;
 export type ValidLanguage = (typeof languages)[number];
 export type ValidLocale = (typeof locales)[number];
 
@@ -55,7 +55,7 @@ export const getTranslator = (dictionary: Record<string, unknown>) => {
   };
 };
 
-const routeNames = ['users', 'root'] as const;
+const routeNames = ['users', 'root', 'content'] as const;
 export type RouteName = (typeof routeNames)[number];
 
 type RouteTranslations = { [lang in ValidLanguage]: string };
@@ -69,6 +69,10 @@ export const routes: {
   root: {
     en: '/',
     es: '/',
+  },
+  content: {
+    es: '/contenido',
+    en: '/content',
   },
 } as const;
 

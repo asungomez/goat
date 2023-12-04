@@ -1,3 +1,4 @@
+'use client';
 import { useAmplify } from '@/hooks/useAmplify';
 import {
   CognitoUserWithAttributes,

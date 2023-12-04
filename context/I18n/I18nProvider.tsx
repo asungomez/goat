@@ -1,3 +1,4 @@
+'use client';
 import { getTranslator, ValidLanguage } from '@/i18n';
 import { usePathname } from 'next/navigation';
 import { FC, ReactNode, useMemo } from 'react';

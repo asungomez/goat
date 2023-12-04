@@ -9,11 +9,11 @@ import {
 import { FC, ReactNode } from 'react';
 import { LoadingSkeleton } from '../LoadingSkeleton/LoadingSkeleton';
 
-type AdminOnlyProps = {
+type EditorOnlyProps = {
   children: ReactNode;
 };
 
-export const AdminOnly: FC<AdminOnlyProps> = ({ children }) => {
+export const EditorOnly: FC<EditorOnlyProps> = ({ children }) => {
   const { isInGroup, authStatus } = useAuth();
   const { t } = useI18n();
 
@@ -21,14 +21,14 @@ export const AdminOnly: FC<AdminOnlyProps> = ({ children }) => {
     return <LoadingSkeleton />;
   }
 
-  if (isInGroup('Admin')) {
+  if (isInGroup('Admin') || isInGroup('Editor')) {
     return <>{children}</>;
   }
   return (
     <Alert status="error">
       <AlertIcon />
       <AlertTitle>{t('forbidden')}</AlertTitle>
-      <AlertDescription>{t('admin-only')}</AlertDescription>
+      <AlertDescription>{t('editor-only')}</AlertDescription>
     </Alert>
   );
 };

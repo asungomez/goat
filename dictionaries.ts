@@ -2,6 +2,8 @@ export const dictionaries = {
   en: {
     'admin-only': 'You need to be admin to perform this action',
     clear: 'Clear',
+    content: 'Content',
+    'editor-only': 'You need to be editor to perform this action',
     'empty-message': 'This looks empty',
     forbidden: 'Forbidden',
     'internal-error': 'Internal error',
@@ -16,6 +18,8 @@ export const dictionaries = {
   es: {
     'admin-only': 'Necesitas ser Administrador para llevar a cabo esta acción',
     clear: 'Borrar',
+    content: 'Contenido',
+    'editor-only': 'Necesitas ser Editor para llevar a cabo esta acción',
     'empty-message': 'Parece que aquí no hay nada',
     forbidden: 'Acceso restringido',
     'internal-error': 'Error interno',

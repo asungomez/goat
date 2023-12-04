@@ -8,4 +8,4 @@ services:
       - '8008:8000'
     working_dir: /home/dynamodblocal
     volumes:
-      - './docker/dynamodb:/home/dynamodblocal/data'
+      - './docker_volumes/dynamodb:/home/dynamodblocal/data'

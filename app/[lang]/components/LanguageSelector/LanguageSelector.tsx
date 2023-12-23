@@ -29,9 +29,10 @@ export const LanguageSelector: FC = () => {
         currentRoute = currentRoute.slice(0, currentRoute.length - 1);
       }
       const routeName = getRouteName(currentRoute, currentLanguage);
-      const newPathname = routeName
-        ? getLocalizedRoute(routeName, language)
-        : path;
+      const newPathname = getLocalizedRoute(
+        routeName?.length ? routeName : 'root',
+        language,
+      );
       if (newPathname) {
         router.push(newPathname);
       }

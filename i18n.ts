@@ -55,46 +55,70 @@ export const getTranslator = (dictionary: Record<string, unknown>) => {
   };
 };
 
-const routeNames = ['users', 'root', 'content', 'content/create-city'] as const;
+const routeNames = ['users', 'root', 'content', 'create-city', 'city'] as const;
 export type RouteName = (typeof routeNames)[number];
 
 type RouteTranslations = { [lang in ValidLanguage]: string };
 export const routes: {
   [name in RouteName]: RouteTranslations;
 } = {
-  content: {
-    es: '/contenido',
-    en: '/content',
+  city: {
+    es: 'ciudad',
+    en: 'city',
   },
-  'content/create-city': {
-    es: '/contenido/crear-ciudad',
-    en: '/content/create-city',
+  content: {
+    es: 'contenido',
+    en: 'content',
+  },
+  'create-city': {
+    es: 'crear-ciudad',
+    en: 'create-city',
   },
   root: {
-    en: '/',
-    es: '/',
+    en: '',
+    es: '',
   },
   users: {
-    es: '/usuarios',
-    en: '/users',
+    es: 'usuarios',
+    en: 'users',
   },
 } as const;
 
 export const getRouteName = (
-  name: string,
+  path: string,
   language: ValidLanguage,
-): RouteName | null => {
-  for (const routeName in routes) {
-    if (Object.hasOwn(routes, routeName)) {
-      const route = routes[routeName as RouteName];
-      if (route[language] === name) {
-        return routeName as RouteName;
-      }
-    }
+): string | null => {
+  if (path === '') {
+    return '';
   }
-  return null;
+  const transformedPath = path
+    .split('/')
+    .filter((part) => part.length > 0)
+    .map((part) => {
+      const lowercasePart = part.toLowerCase();
+      for (const pathSegment in routes) {
+        const translations = routes[pathSegment as RouteName];
+        if (translations[language] === lowercasePart) {
+          return pathSegment;
+        }
+      }
+      return lowercasePart;
+    })
+    .join('/');
+
+  return transformedPath;
 };
 
-export const getLocalizedRoute = (name: RouteName, language: ValidLanguage) => {
-  return `/${language}${routes[name][language]}`;
+export const getLocalizedRoute = (name: string, language: ValidLanguage) => {
+  let route = `/${language}`;
+  const nameParts = name.split('/').filter((part) => part.length > 0);
+  for (const part of nameParts) {
+    if (routes[part as RouteName] && routes[part as RouteName][language]) {
+      route += `/${routes[part as RouteName][language]}`;
+    } else {
+      route += `/${part}`;
+    }
+  }
+
+  return route;
 };

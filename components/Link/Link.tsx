@@ -2,10 +2,10 @@ import { FC, ReactNode } from 'react';
 import NextLink from 'next/link';
 import { Link as ChakraLink } from '@chakra-ui/react';
 import { useI18n } from '@/context/I18n/I18nContext';
-import { getLocalizedRoute, RouteName } from '@/i18n';
+import { getLocalizedRoute } from '@/i18n';
 
 type LinkProps = {
-  to: RouteName;
+  to: string;
   children?: ReactNode;
 };
 export const Link: FC<LinkProps> = ({ to, children }) => {

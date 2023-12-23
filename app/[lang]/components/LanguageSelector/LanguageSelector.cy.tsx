@@ -51,14 +51,14 @@ describe('<LanguageSelector />', () => {
     mountComponent('es');
     cy.findByLabelText('language').click();
     cy.findByText('en').click();
-    cy.get('@push').should('be.calledWith', '/en/');
+    cy.get('@push').should('be.calledWith', '/en/root');
   });
 
   it('redirects to the spanish site when selecting spanish if the current language is english', () => {
     mountComponent('en');
     cy.findByLabelText('language').click();
     cy.findByText('es').click();
-    cy.get('@push').should('be.calledWith', '/es/');
+    cy.get('@push').should('be.calledWith', '/es/root');
   });
 
   it('does not redirect if the site is in english and the english language is selected', () => {

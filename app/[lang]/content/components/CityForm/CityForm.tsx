@@ -16,6 +16,7 @@ import { CityTranslationForm } from '../CityTranslationForm/CityTranslationForm'
 import { FaRegSave } from 'react-icons/fa';
 import { City, CityTranslation } from '@/model/city/types';
 import { createCity } from '@/services/citiesService';
+import { useNavigate } from '@/hooks/useNavigate';
 
 const EMPTY_TRANSLATION: CityTranslation = {
   name: '',
@@ -28,7 +29,7 @@ export const CityForm: FC = () => {
     en: EMPTY_TRANSLATION,
     es: EMPTY_TRANSLATION,
   });
-  const [creating, setCreating] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [valid, setValid] = useState<{ [language in ValidLanguage]: boolean }>({
     en: false,
     es: false,
@@ -37,8 +38,9 @@ export const CityForm: FC = () => {
     () => Object.values(valid).reduce((acc, curr) => acc && curr, true),
     [valid],
   );
+  const navigate = useNavigate();
 
-  const { t } = useI18n();
+  const { t, currentLanguage } = useI18n();
 
   const translationChangeHandler =
     (language: ValidLanguage) =>
@@ -58,13 +60,18 @@ export const CityForm: FC = () => {
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     if (isValid) {
-      setCreating(true);
+      setSubmitting(true);
       createCity({ translations, images: [] })
-        .then(() => {
-          setCreating(false);
+        .then((city) => {
+          setSubmitting(false);
+          if (currentLanguage) {
+            navigate(
+              `/content/city/${city.translations[currentLanguage].slug}`,
+            );
+          }
         })
         .catch(() => {
-          setCreating(false);
+          setSubmitting(false);
         });
     }
   };
@@ -108,8 +115,8 @@ export const CityForm: FC = () => {
             <Button
               type="submit"
               leftIcon={<Icon as={FaRegSave} />}
-              isLoading={creating}
-              isDisabled={!isValid || creating}
+              isLoading={submitting}
+              isDisabled={!isValid || submitting}
             >
               {t('form.buttons.save')}
             </Button>

@@ -16,6 +16,7 @@ import {
 import { FC } from 'react';
 import { MdModeEdit, MdDelete } from 'react-icons/md';
 import { FaList } from 'react-icons/fa';
+import { Link } from '@/components/Link/Link';
 
 type CityCardProps = {
   city: TranslatedCity;
@@ -34,7 +35,9 @@ export const CityCard: FC<CityCardProps> = ({ city }) => {
       <CardBody>
         <Image src={city.images[0]} alt={city.name} borderRadius="lg" />
         <Stack mt="6" spacing="3">
-          <Heading size="md">{city.name}</Heading>
+          <Link to={`/content/city/${city.slug}`}>
+            <Heading size="md">{city.name}</Heading>
+          </Link>
           <Text>{city.description}</Text>
         </Stack>
       </CardBody>

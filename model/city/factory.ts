@@ -1,4 +1,5 @@
 import { languages, ValidLanguage } from '@/i18n';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'fishery';
 import { City, TranslatedCity } from './types';
 
@@ -6,15 +7,19 @@ export const cityFactory = Factory.define<City>(({ sequence, params }) => {
   const translations: Partial<City['translations']> = {};
   for (const lang of languages) {
     translations[lang] = {
-      name: `City ${sequence} in ${lang}`,
+      name: faker.location.city(),
       slug: `city-${sequence}-in-${lang}`,
-      description: `Description of city ${sequence} in ${lang}`,
+      description: faker.lorem.paragraphs(3),
       ...params?.translations?.[lang],
     };
   }
   return {
     id: `city-${sequence}`,
-    images: ['https://picsum.photos/900/600'],
+    images: [
+      'https://picsum.photos/900/600',
+      'https://picsum.photos/900/600',
+      'https://picsum.photos/900/600',
+    ],
     ...params,
     translations: translations as City['translations'],
   };
@@ -38,10 +43,14 @@ export const translatedCityFactory = Factory.define<
   }
   return {
     id: `city-${sequence}`,
-    images: ['https://picsum.photos/900/600'],
-    name: `City ${sequence}`,
+    images: [
+      'https://loremflickr.com/900/600',
+      'https://picsum.photos/900/600',
+      'https://placekitten.com/900/600',
+    ],
+    name: faker.location.city(),
     slug: `city-${sequence}`,
-    description: `Description of city ${sequence}`,
+    description: faker.lorem.paragraphs(3),
     ...params,
   };
 });

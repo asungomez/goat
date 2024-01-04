@@ -22,7 +22,12 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "types": ["cypress", "node", "@testing-library/cypress"]
+    "types": [
+      "cypress",
+      "node",
+      "@testing-library/cypress",
+      "cypress-real-events"
+    ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

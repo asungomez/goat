@@ -1,8 +1,8 @@
 export const dictionaries = {
   en: {
-    title: 'Create city',
+    title: 'Edit city',
   },
   es: {
-    title: 'Crear ciudad',
+    title: 'Editar ciudad',
   },
 } as const;

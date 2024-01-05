@@ -55,7 +55,14 @@ export const getTranslator = (dictionary: Record<string, unknown>) => {
   };
 };
 
-const routeNames = ['users', 'root', 'content', 'create-city', 'city'] as const;
+const routeNames = [
+  'users',
+  'root',
+  'content',
+  'create-city',
+  'city',
+  'edit',
+] as const;
 export type RouteName = (typeof routeNames)[number];
 
 type RouteTranslations = { [lang in ValidLanguage]: string };
@@ -73,6 +80,10 @@ export const routes: {
   'create-city': {
     es: 'crear-ciudad',
     en: 'create-city',
+  },
+  edit: {
+    es: 'editar',
+    en: 'edit',
   },
   root: {
     en: '',

@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react';
 import { FC } from 'react';
 import { MdModeEdit, MdDelete } from 'react-icons/md';
-import { FaList } from 'react-icons/fa';
 import { Link } from '@/components/Link/Link';
+import { truncate } from 'lodash';
 
 type CityCardProps = {
   city: TranslatedCity;
@@ -38,14 +38,23 @@ export const CityCard: FC<CityCardProps> = ({ city }) => {
           <Link to={`/content/city/${city.slug}`}>
             <Heading size="md">{city.name}</Heading>
           </Link>
-          <Text>{city.description}</Text>
+          <Text>
+            {truncate(city.description, { length: 100, separator: /\s/g })}
+          </Text>
         </Stack>
       </CardBody>
-      <CardFooter>
+      <CardFooter justifyContent="flex-end" display="flex" flexDir="row">
         <ButtonGroup spacing="2">
-          <Button variant="solid" leftIcon={<Icon as={MdModeEdit} />} size="sm">
-            {t('edit-city')}
-          </Button>
+          <Link to={`/content/city/${city.slug}/edit`}>
+            <Button
+              variant="solid"
+              leftIcon={<Icon as={MdModeEdit} />}
+              size="sm"
+            >
+              {t('edit-city')}
+            </Button>
+          </Link>
+
           <Button
             variant="solid"
             colorScheme="red"
@@ -53,9 +62,6 @@ export const CityCard: FC<CityCardProps> = ({ city }) => {
             size="sm"
           >
             {t('delete-city')}
-          </Button>
-          <Button variant="outline" leftIcon={<Icon as={FaList} />} size="sm">
-            {t('list-city-points')}
           </Button>
         </ButtonGroup>
       </CardFooter>

@@ -1,6 +1,34 @@
 export const dictionaries = {
   en: {
     'admin-only': 'You need to be admin to perform this action',
+    cityForm: {
+      buttons: {
+        cancel: 'Cancel',
+        save: 'Save',
+      },
+      labels: {
+        images: 'Images',
+        name: 'Name',
+        slug: 'Slug',
+        description: 'Description',
+      },
+      titles: {
+        en: 'English',
+        es: 'Spanish',
+      },
+      errors: {
+        name: {
+          required: 'Name is required',
+        },
+        slug: {
+          required: 'Slug is required',
+          format: 'Slug can only contain letters, numbers and dashes',
+        },
+        description: {
+          required: 'Description is required',
+        },
+      },
+    },
     clear: 'Clear',
     'click-to-upload': 'Click to upload',
     content: 'Content',
@@ -19,6 +47,35 @@ export const dictionaries = {
   },
   es: {
     'admin-only': 'Necesitas ser Administrador para llevar a cabo esta acción',
+    cityForm: {
+      buttons: {
+        cancel: 'Cancelar',
+        save: 'Guardar',
+      },
+      labels: {
+        images: 'Imágenes',
+        name: 'Nombre',
+        slug: 'Slug',
+        description: 'Descripción',
+      },
+      titles: {
+        en: 'Inglés',
+        es: 'Español',
+        description: 'Descripción',
+      },
+      errors: {
+        name: {
+          required: 'El nombre es obligatorio',
+        },
+        slug: {
+          required: 'El slug es obligatorio',
+          format: 'El slug sólo puede contener letras, números y guiones',
+        },
+        description: {
+          required: 'La descripción es obligatoria',
+        },
+      },
+    },
     clear: 'Borrar',
     'click-to-upload': 'Click para seleccionar',
     content: 'Contenido',

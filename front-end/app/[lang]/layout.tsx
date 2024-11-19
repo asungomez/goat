@@ -12,15 +12,19 @@ export const metadata: Metadata = {
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     lang: Locale;
-  };
+  }>;
 }>;
 
-export default function RootLayout({ children, params }: RootLayoutProps) {
-  setupLocale(params.lang);
+export default async function RootLayout({
+  children,
+  params,
+}: RootLayoutProps) {
+  const { lang } = await params;
+  setupLocale(lang);
   return (
-    <html lang={params.lang}>
+    <html lang={lang}>
       <body>
         <I18nProvider>
           <Navbar />

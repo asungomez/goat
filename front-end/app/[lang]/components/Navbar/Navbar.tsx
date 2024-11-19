@@ -8,23 +8,22 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import logo from "./logo.svg";
 import { Container } from "../Container/Container";
+import { LanguageSelector } from "../LanguageSelector/LanguageSelector";
+import classnames from "classnames";
+import { getPageTranslator } from "@/services/i18n/server";
+import { ServerLink } from "@/components/Link/ServerLink";
 
 const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
+  { name: "home", href: "/", current: true },
+  { name: "content", href: "content", current: false },
 ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export const Navbar: FC = () => {
+export const Navbar: FC = async () => {
+  const t = await getPageTranslator();
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <Container>
@@ -46,29 +45,38 @@ export const Navbar: FC = () => {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <Image alt="GOAT logo" src={logo} className="block h-14 w-auto" />
+              <ServerLink to="/">
+                <Image
+                  alt="GOAT logo"
+                  src={logo}
+                  className="block h-14 w-auto"
+                />
+              </ServerLink>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:flex-col sm:justify-center">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
-                  <a
+                  <ServerLink
+                    to={item.href}
                     key={item.name}
-                    href={item.href}
                     aria-current={item.current ? "page" : undefined}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                      "rounded-md px-3 py-2 text-sm font-medium"
+                    className={classnames(
+                      "rounded-md px-3 py-2 text-sm font-medium",
+                      {
+                        ["bg-gray-900 text-white"]: item.current,
+                        ["text-gray-300 hover:bg-gray-700 hover:text-white"]:
+                          !item.current,
+                      }
                     )}
                   >
-                    {item.name}
-                  </a>
+                    {t(item.name)}
+                  </ServerLink>
                 ))}
               </div>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <LanguageSelector />
             <Menu as="div" className="relative ml-3">
               <div>
                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -90,7 +98,7 @@ export const Navbar: FC = () => {
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
-                    Your Profile
+                    {t("my-account")}
                   </a>
                 </MenuItem>
                 <MenuItem>
@@ -98,7 +106,7 @@ export const Navbar: FC = () => {
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
-                    Settings
+                    {t("settings")}
                   </a>
                 </MenuItem>
                 <MenuItem>
@@ -106,7 +114,7 @@ export const Navbar: FC = () => {
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
-                    Sign out
+                    {t("log-out")}
                   </a>
                 </MenuItem>
               </MenuItems>
@@ -123,14 +131,16 @@ export const Navbar: FC = () => {
               as="a"
               href={item.href}
               aria-current={item.current ? "page" : undefined}
-              className={classNames(
-                item.current
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                "block rounded-md px-3 py-2 text-base font-medium"
+              className={classnames(
+                "block rounded-md px-3 py-2 text-base font-medium",
+                {
+                  ["bg-gray-900 text-white"]: item.current,
+                  ["text-gray-300 hover:bg-gray-700 hover:text-white"]:
+                    !item.current,
+                }
               )}
             >
-              {item.name}
+              {t(item.name)}
             </DisclosureButton>
           ))}
         </div>
@@ -138,3 +148,10 @@ export const Navbar: FC = () => {
     </Disclosure>
   );
 };
+
+// classNames(
+//   item.current
+//     ? "bg-gray-900 text-white"
+//     : "text-gray-300 hover:bg-gray-700 hover:text-white",
+//   "rounded-md px-3 py-2 text-sm font-medium"
+// );

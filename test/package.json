@@ -1,0 +1,12 @@
+{
+  "name": "test",
+  "packageManager": "yarn@4.5.1",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "testcontainers": "^10.14.0",
+    "typescript": "^5.6.3"
+  }
+}
